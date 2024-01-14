@@ -64,7 +64,7 @@ def rollDice(dice, d, i, j):
 n, m = map(int, input().split())
 board = [list(map(int, input().split())) for _ in range(n)]
 # 처음 주사위 위치 딕셔너리로 저장
-firstDice = {'top': 1, 'bottom': 6, 'left': 4, 'right': 3, 'front':2, 'back': 7}
+firstDice = {'top': 1, 'bottom': 6, 'left': 4, 'right': 3, 'front':2, 'back': 5}
 # 동 남 서 북 이동
 di = [0, 1, 0, -1]
 dj = [1, 0, -1, 0]
