@@ -9,7 +9,7 @@ def changeDiceBottom(dice, d):
     # 서
     elif d == 2:
         nextDice = {'top': dice['right'], 'bottom': dice['left'], 'left': dice['top'], 'right': dice['bottom'], 'front':dice['front'], 'back': dice['back']}
-    # 북 d == (-1, 0)    
+    # 북 d == 3 
     else:
         nextDice = {'top': dice['front'], 'bottom': dice['back'], 'left': dice['left'], 'right': dice['right'], 'front':dice['bottom'], 'back': dice['top']}
     return nextDice
@@ -20,7 +20,7 @@ def bfs(i, j):
     # 바닥 숫자로 방문 체크
     visited[i][j] = board[i][j]
     stack = [(i, j)]
-    sameNumCnt = 1
+    score = board[i][j]
     while stack:
         i, j = stack.pop()
 
@@ -28,36 +28,36 @@ def bfs(i, j):
             ni = i + di[k]
             nj = j + dj[k]
             if 0 <= ni < n and 0 <= nj < n and not visited[ni][nj] and board[ni][nj] == visited[i][j]:
-                sameNumCnt += 1
+                score += board[ni][nj]
                 visited[ni][nj] = visited[i][j]
                 stack.append((ni, nj))
-    return visited[i][j] * sameNumCnt
+    return score
 
 # 3. 주사위 m번 굴리기 (+진행 방향 변경)
 def rollDice(dice, d, i, j):
     totalScore = 0
-    # 주사위 굴리는 횟수 저장
-    rollCnt = 0
-    while rollCnt < m:
+    for _ in range(m):
         ni = i + di[d]
         nj = j + dj[d]
-        if 0 <= ni < n and 0 <= nj < n:
-            i = ni
-            j = nj
-            # 인접한 같은 숫자 합
-            totalScore += bfs(i, j)
-            # 주사위 굴리기
-            dice = changeDiceBottom(dice, d)
-            if dice['bottom'] > board[i][j]:
-                # 90' 시계방향으로 회전
-                d = (d+1)%4
-            elif dice['bottom'] < board[i][j]:
-                # 90' 반시계방향으로 회전
-                d = (d-1)%4
-            rollCnt += 1
-        else:
-            # 반대 방향으로 한 칸 이동
+        # 격자를 벗어나면
+        if not (0 <= ni < n and 0 <= nj < n):
+            # 반대 방향으로 이동
             d = (d+2)%4
+            ni = i + di[d]
+            nj = j + dj[d]
+        # 주사위 이동
+        i = ni
+        j = nj
+        # 인접한 같은 숫자 합
+        totalScore += bfs(i, j)
+        # 주사위 굴리기
+        dice = changeDiceBottom(dice, d)
+        if dice['bottom'] > board[i][j]:
+            # 90' 시계방향으로 회전
+            d = (d+1)%4
+        elif dice['bottom'] < board[i][j]:
+            # 90' 반시계방향으로 회전
+            d = (d-1)%4
     return totalScore
 
 
