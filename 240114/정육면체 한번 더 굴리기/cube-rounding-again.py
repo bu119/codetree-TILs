@@ -1,3 +1,10 @@
+#       처음                    동                      서                  남                  북
+# left, bottom, right    bottom, right, top    top, left, bottom    left, front, right    left, back, right
+#       front                   front               front                   top                 bottom
+#       top                     left                right                   back                front
+#       back                    back                back                    bottom              top
+
+
 # 1. 주사위 동, 남, 서, 북으로 굴리기 (바뀐 숫자 위치 반환)
 def changeDiceBottom(dice, d):
     # 동
@@ -37,33 +44,29 @@ def bfs(i, j):
 def rollDice(dice, d, i, j):
     totalScore = 0
     for _ in range(m):
-        ni = i + di[d]
-        nj = j + dj[d]
-        # 격자를 벗어나면
-        if not (0 <= ni < n and 0 <= nj < n):
-            # 반대 방향으로 이동
+        # 다음 이동 위치가 격자를 벗어나면
+        if not (0 <= i + di[d] < n and 0 <= j + dj[d] < n):
+            # 방향을 반대로 변경
             d = (d+2)%4
-            ni = i + di[d]
-            nj = j + dj[d]
         # 주사위 이동
-        i = ni
-        j = nj
-        # 인접한 같은 숫자 합
+        i += di[d]
+        j += dj[d]
+        # 인접한 같은 숫자 더하기
         totalScore += bfs(i, j)
-        # 주사위 굴리기
+        # 주사위 굴리기 (면 위치 변경)
         dice = changeDiceBottom(dice, d)
         if dice['bottom'] > board[i][j]:
-            # 90' 시계방향으로 회전
+            # 90' 시계방향 회전
             d = (d+1)%4
         elif dice['bottom'] < board[i][j]:
-            # 90' 반시계방향으로 회전
+            # 90' 반시계방향 회전
             d = (d-1)%4
     return totalScore
 
 
 n, m = map(int, input().split())
 board = [list(map(int, input().split())) for _ in range(n)]
-# 처음 주사위 위치 딕셔너리로 저장
+# 처음 주사위 숫자 위치 저장
 firstDice = {'top': 1, 'bottom': 6, 'left': 4, 'right': 3, 'front':2, 'back': 5}
 # 동 남 서 북 이동
 di = [0, 1, 0, -1]
