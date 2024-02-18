@@ -38,7 +38,7 @@ def dfs(cnt, eat, i, j):
     if cnt == 3:
         if maxEat < eat:
             maxEat = eat
-            pacman = (i, j)
+            pacman = [i, j]
             pacman_route = deepcopy(route)
         return
 
@@ -47,7 +47,7 @@ def dfs(cnt, eat, i, j):
         nj = j + dj[k]
         if 0 <= ni < 4 and 0 <= nj < 4:
             # 몬스터 개수 확인
-            # 이미 지난 칸이면 몬스터 없지~
+            # ///// 이미 지난 칸이면 몬스터 없지~ /////
             monster_cnt = 0
             if (ni, nj) not in route:
                 monster_cnt = len(monsters[ni][nj])
