@@ -33,11 +33,17 @@ def move_pacman():
             monster_corpse[i][j] = 3
 
 def dfs(cnt, eat, i, j):
-    global pacman, maxEat, pacman_route, route
-    
+    global pacman, maxEat, pacman_route, route, visited
+
+    curr_route = tuple(sorted(route))
+    if curr_route in visited:
+        return
+    visited.add(curr_route)
+
     if cnt == 3:
         if maxEat < eat:
             maxEat = eat
+            # /////////////////
             pacman = [i, j]
             pacman_route = deepcopy(route)
         return
@@ -89,6 +95,7 @@ for _ in range(t):
     maxEat = -1
     # 최종 경로
     pacman_route = []
+    visited = set()
     # 계속 변경
     route = []
     move_pacman()
