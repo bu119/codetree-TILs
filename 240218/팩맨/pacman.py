@@ -25,10 +25,12 @@ def move_pacman():
     dfs(0, 0, pacman[0], pacman[1])
 
     for i, j in pacman_route:
-        monsters[i][j] = []
-        # 시체가 소멸되기 까지는 총 두 턴을 필요
-        # ///// 소멸을 한턴이 끝나기 전에 실행하므로 2가 아니라 3을 해줘야한다. /////
-        monster_corpse[i][j] = 3
+        # ///// 몬스터 있을 때만 실행 /////
+        if monsters[i][j]:
+            monsters[i][j] = []
+            # 시체가 소멸되기 까지는 총 두 턴을 필요
+            # ///// 소멸을 한턴이 끝나기 전에 실행하므로 2가 아니라 3을 해줘야한다. /////
+            monster_corpse[i][j] = 3
 
 def dfs(cnt, eat, i, j):
     global pacman, maxEat, pacman_route, route
@@ -58,7 +60,7 @@ def dfs(cnt, eat, i, j):
 def extinction_and_hatching():
     for i in range(4):
         for j in range(4):
-            if monster_corpse[i][j]:
+            if monster_corpse[i][j] > 0:
                 monster_corpse[i][j] -= 1
             if monster_clone[i][j]:
                 monsters[i][j].extend(monster_clone[i][j])
