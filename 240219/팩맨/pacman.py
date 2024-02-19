@@ -12,7 +12,7 @@ def move_monster():
                     nd = (move_d + k) % 8
                     ni = i + di[nd]
                     nj = j + dj[nd]
-                    if 0 <= ni < 4 and 0 <= nj < 4 and monster_corpse[ni][nj] == 0 and pacman != [ni, nj]:
+                    if 0 <= ni < 4 and 0 <= nj < 4 and monster_corpse[ni][nj] == 0 and (pi, pj) != [ni, nj]:
                         move_d = nd
                         move_i = ni
                         move_j = nj
@@ -22,7 +22,7 @@ def move_monster():
 
 # 팩맨 이동
 def move_pacman():
-    dfs(0, 0, pacman[0], pacman[1])
+    dfs(0, 0, pi, pj)
 
     for i, j in pacman_route:
         # ///// 몬스터 있을 때만 실행 /////
@@ -34,18 +34,17 @@ def move_pacman():
 
 def dfs(cnt, eat, i, j):
     global pacman, maxEat, pacman_route, route, visited
+    
+    # 방문 체크
+    curr_route = tuple(sorted(route))
+    if curr_route in visited:
+        return
+    visited.add(curr_route)
 
     if cnt == 3:
-        # 방문 체크
-        curr_route = tuple(sorted(route))
-        if curr_route in visited:
-            return
-        visited.add(curr_route)
-
         if maxEat < eat:
             maxEat = eat
-            # /////////////////
-            pacman = [i, j]
+            pi, pj = i, j
             pacman_route = deepcopy(route)
         return
 
@@ -75,7 +74,8 @@ def extinction_and_hatching():
 
 m, t = map(int, input().split())
 r, c = map(int, input().split())
-pacman = [r-1, c-1]
+pi = r-1
+pj = c-1
 monsters = [[[] for _ in range(4)] for _ in range(4)]
 for _ in range(m):
     r, c, d = map(int, input().split())
