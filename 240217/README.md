@@ -7,7 +7,7 @@
 
 |기록분류|이름|티어|유형|상태|최근 제출 코드|
 |---|---|---|---|---|---|
-|기출문제|[팩맨](https://www.codetree.ai/training-field/frequent-problems/problems/pacman)|![Gold1][g1]|`Simulation`|![Failed][failed]|[링크](https://github.com/bu119/codetree-TILs/blob/main/240217/%ED%8C%A9%EB%A7%A8/pacman.py)|
+|기출문제|[팩맨](https://www.codetree.ai/training-field/frequent-problems/problems/pacman)|![Gold1][g1]|`Simulation`|![Passed][passed]|[링크](https://github.com/bu119/codetree-TILs/blob/main/240217/%ED%8C%A9%EB%A7%A8/pacman.py)|
 
 
 
