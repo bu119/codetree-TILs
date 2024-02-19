@@ -5,14 +5,13 @@ def move_monster():
     new_monster = [[[] for _ in range(4)] for _ in range(4)]
     for i in range(4):
         for j in range(4):
-            while monsters[i][j]:
-                move_d = monsters[i][j].pop()
+            for move_d in monsters[i][j]:
                 move_i, move_j = i, j
                 for k in range(8):
                     nd = (move_d + k) % 8
                     ni = i + di[nd]
                     nj = j + dj[nd]
-                    if 0 <= ni < 4 and 0 <= nj < 4 and monster_corpse[ni][nj] == 0 and (pi, pj) != [ni, nj]:
+                    if 0 <= ni < 4 and 0 <= nj < 4 and monster_corpse[ni][nj] == 0 and (pi, pj) != (ni, nj):
                         move_d = nd
                         move_i = ni
                         move_j = nj
@@ -44,6 +43,7 @@ def dfs(cnt, eat, i, j):
     if cnt == 3:
         if maxEat < eat:
             maxEat = eat
+            # /////////////////
             pi, pj = i, j
             pacman_route = deepcopy(route)
         return
