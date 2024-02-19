@@ -33,7 +33,7 @@ def move_pacman():
             monster_corpse[i][j] = 3
 
 def dfs(cnt, eat, i, j):
-    global pacman, maxEat, pacman_route, route, visited
+    global pi, pj, maxEat, pacman_route, route, visited
     
     # 방문 체크
     curr_route = tuple(sorted(route))
