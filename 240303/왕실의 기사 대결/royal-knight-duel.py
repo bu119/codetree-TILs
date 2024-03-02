@@ -67,7 +67,7 @@ def can_move(starter, other):
 
 
 def move_knight():
-    global new_knights, new_knightsInfo
+
     # 밀리는 기사와 움직임 상태 저장
     pushed_knight = deque()
     pushed_knight.append(i)
@@ -106,7 +106,9 @@ dj = [0, 1, 0, -1]
 
 for _ in range(q):
     i, d = map(int, input().split())
-
+    
+    if i not in knightsInfo:
+        continue
     new_knights = deepcopy(knights)
     new_knightsInfo = deepcopy(knightsInfo)
 
