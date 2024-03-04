@@ -16,11 +16,11 @@ def move_knight(starter, direction):
 
     # 방문 체크
     visited.add(starter)
-    # 만난 순서대로 체크
-    deq = deque()
-    deq.append(starter)
-    while deq:
-        mover = deq.popleft()
+    # 이동 가능한 기사 탐색
+    stack = [starter]
+
+    while stack:
+        mover = stack.pop()
         r, c, h, w, k, damage = knightsInfo[mover]
 
         if k <= damage or mover not in knightsInfo:
@@ -40,7 +40,7 @@ def move_knight(starter, direction):
                 # 다른 기사 만나면 방문 체크하고 계속 탐색
                 if knights[nx][ny] != mover and knights[nx][ny] not in visited:
                     visited.add(knights[nx][ny])
-                    deq.append(knights[nx][ny])
+                    stack.append(knights[nx][ny])
         
     # 이동 가능하면 밀린 기사 시작 위치 변경
     for num in visited:
