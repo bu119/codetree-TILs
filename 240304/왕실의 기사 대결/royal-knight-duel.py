@@ -1,5 +1,4 @@
-from copy import deepcopy
-from collections import deque
+# 처음에 틀린 이유: L×L 크기의 체스판을 탐색하면서 기사 이동, 기사 밀기, 벽 체크, 함정 개수 체크 등을 한꺼번에 수행하려고 했기 때문이다.
 
 # 기사 이동
 def move_knight(starter, direction):
