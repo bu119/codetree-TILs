@@ -57,12 +57,10 @@ def spray_herbicide():
                 curr_affected = [(i, j)]
                 # 대각선 방향
                 for x in range(4, 8):
-                    ni = i
-                    nj = j
                     # k번 만큼 이어짐
-                    for _ in range(k):
-                        ni += di[x]
-                        nj += dj[x]
+                    for y in range(1, k+1):
+                        ni = i + di[x]*y
+                        nj = j + dj[x]*y
                         if 0 <= ni < n and 0 <= nj < n:
                             # 나무가 계속있는 경우에만 제초제가 이어서 뿌려짐
                             if graph[ni][nj] > 0:
