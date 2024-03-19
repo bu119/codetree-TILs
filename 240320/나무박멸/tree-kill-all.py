@@ -67,9 +67,8 @@ def spray_herbicide():
                             # 나무면 제초제가 계속 뿌려짐
                             if graph[ni][nj] > 0:
                                 currV += graph[ni][nj]
-                                curr_affected.append((ni, nj))
                             else:
-                                # 벽, 빈 칸이면 제초제 멈춤
+                                # 벽이면 멈춤
                                 break
                         else:
                             # 다른 방향 탐색
