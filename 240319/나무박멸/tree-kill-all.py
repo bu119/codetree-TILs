@@ -8,9 +8,9 @@ def tree_growth():
             # 나무가 있으면 인접한 네 개의 칸 탐색
             if graph[i][j] > 0:
                 # 인접한 칸 중 나무가 있으면 현재 나무 +1 
-                for d in range(4):
-                    ni = i + di[d]
-                    nj = j + dj[d]
+                for x in range(4):
+                    ni = i + di[x]
+                    nj = j + dj[x]
                     if 0 <= ni < n and 0 <= nj < n and graph[ni][nj] > 0:
                         graph[i][j] += 1
 
@@ -28,9 +28,9 @@ def tree_propagation():
                 propagation = []
                 cnt = 0
                 # 인접한 칸 중 탐색
-                for d in range(4):
-                    ni = i + di[d]
-                    nj = j + dj[d]
+                for x in range(4):
+                    ni = i + di[x]
+                    nj = j + dj[x]
                     # 벽, 다른 나무, 제초제 모두 없는 칸이며 번식 진행
                     if 0 <= ni < n and 0 <= nj < n and graph[ni][nj] == 0 and herbicide[ni][nj] == 0:
                         propagation.append((ni, nj))
@@ -42,7 +42,7 @@ def tree_propagation():
 
 # 3.제초제 뿌리기
 def spray_herbicide():
-    global answer
+    global answer, graph, herbicide
     # 제초제 뿌릴 위치 찾기
     # 박멸되는 나무 수 
     maxV = 0
@@ -51,20 +51,27 @@ def spray_herbicide():
     # 나무 위치 찾기
     for i in range(n):
         for j in range(n):
-            # 나무가 있으면 제초제 뿌릴 수 있는 대각선 나무 탐색
+            # 나무가 있으면 대각선 나무 탐색
             if graph[i][j] > 0:
                 currV = graph[i][j]
                 curr_affected = [(i, j)]
                 # 대각선 방향
-                for d in range(4, 8):
-                    # d만큼 이어짐
-                    for x in range(1, k+1):
-                        ni = i + di[d]*x
-                        nj = j + dj[d]*x
-                        # 나무가 계속있는 경우에만 제초제가 이어서 뿌려짐
-                        if 0 <= ni < n and 0 <= nj < n and graph[ni][nj] > 0:
-                            currV += graph[ni][nj]
-                            curr_affected.append((ni, nj))
+                for x in range(4, 8):
+                    ni = i
+                    nj = j
+                    # k번 만큼 이어짐
+                    for _ in range(k):
+                        ni += di[x]
+                        nj += dj[x]
+                        if 0 <= ni < n and 0 <= nj < n:
+                            # 나무가 계속있는 경우에만 제초제가 이어서 뿌려짐
+                            if graph[ni][nj] > 0:
+                                currV += graph[ni][nj]
+                                curr_affected.append((ni, nj))
+                            else:
+                                # 벽, 빈 칸인 경우, 그 칸 까지는 제초제가 뿌려짐
+                                curr_affected.append((ni, nj))
+                                break
                         else:
                             # 다른 방향 탐색
                             break
@@ -75,11 +82,15 @@ def spray_herbicide():
     # 박멸한 나무 수 저장
     answer += maxV
     # 제초제 뿌리기
-    for ni, nj in exterminated_tree:
-        graph[ni][nj] = 0
-        herbicide[ni][nj] = c+1
+    for i, j in exterminated_tree:
+        # 나무가 있으면 박멸
+        if graph[i][j] > 0:
+            graph[i][j] = 0
+        # 제초제 뿌리기
+        herbicide[i][j] = c
 
 def reduce_herbicide():
+    global herbicide
     # 제초제 위치 찾기
     for i in range(n):
         for j in range(n):
@@ -99,14 +110,15 @@ dj = [1, 0, -1, 0, 1, 1, -1, -1]
 herbicide = [[0]*n for _ in range(n)]
 # m년 동안 총 박멸한 나무 수
 answer = 0
+# m년 동안 수행
 for _ in range(m):
     # 1.나무 성장
     tree_growth()
     # 2.나무 번식
     tree_propagation()
-    # 3.제초제 뿌리기
-    spray_herbicide()
-    # 4.제초제 줄이기
+    # 3.제초제 줄이기
     reduce_herbicide()
+    # 4.제초제 뿌리기
+    spray_herbicide()
 
 print(answer)
