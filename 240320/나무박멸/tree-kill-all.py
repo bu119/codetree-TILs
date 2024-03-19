@@ -62,11 +62,16 @@ def spray_herbicide():
                         ni = i + dih[x]*y
                         nj = j + djh[x]*y
                         if 0 <= ni < n and 0 <= nj < n:
-                            # 제초제 뿌리기
-                            curr_affected.append((ni, nj))
-                            # 나무면 제초제가 계속 뿌려짐
+                            # 나무면 제초제 이어서 뿌림
                             if graph[ni][nj] > 0:
                                 currV += graph[ni][nj]
+                                # 제초제 뿌리기
+                                curr_affected.append((ni, nj))
+                            elif graph[ni][nj] == 0:
+                                # 빈칸이면 제초제 뿌리고 멈춤
+                                # 제초제 뿌리기
+                                curr_affected.append((ni, nj))
+                                break
                             else:
                                 # 벽이면 멈춤
                                 break
@@ -82,8 +87,7 @@ def spray_herbicide():
     # 제초제 뿌리기
     for i, j in exterminated_tree:
         # 나무가 있으면 박멸
-        if graph[i][j] > 0:
-            graph[i][j] = 0
+        graph[i][j] = 0
         # 제초제 뿌리기
         herbicide[i][j] = c
 
