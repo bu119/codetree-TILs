@@ -56,27 +56,22 @@ def spray_herbicide():
                 currV = graph[i][j]
                 curr_affected = [(i, j)]
                 # 대각선 방향
-                for x in range(4):
+                for x in range(4, 8):
                     # k번 만큼 이어짐
-                    for y in range(1, k+1):
-                        ni = i + dih[x]*y
-                        nj = j + djh[x]*y
+                    for z in range(1, k+1):
+                        ni = i + di[x]*z
+                        nj = j + dj[x]*z
                         if 0 <= ni < n and 0 <= nj < n:
+                            # 제초제 뿌리기
+                            curr_affected.append((ni, nj))
                             # 나무면 제초제 이어서 뿌림
                             if graph[ni][nj] > 0:
                                 currV += graph[ni][nj]
-                                # 제초제 뿌리기
-                                curr_affected.append((ni, nj))
-                            elif graph[ni][nj] == 0:
-                                # 빈칸이면 제초제 뿌리고 멈춤
-                                # 제초제 뿌리기
-                                curr_affected.append((ni, nj))
-                                break
                             else:
-                                # 벽이면 멈춤
+                                # 벽, 빈 칸이면 멈춤
                                 break
                         else:
-                            # 다른 방향 탐색
+                            # 범위를 벗어나서 현재 방향은 더 이상 탐색 불가 
                             break
                 # 박멸되는 나무 수가 저장된 수보다 크면 제초제의 영향받는 위치/나무 수 갱신
                 if maxV < currV:
@@ -87,7 +82,8 @@ def spray_herbicide():
     # 제초제 뿌리기
     for i, j in exterminated_tree:
         # 나무가 있으면 박멸
-        graph[i][j] = 0
+        if graph[i][j] > 0:
+            graph[i][j] = 0
         # 제초제 뿌리기
         herbicide[i][j] = c
 
@@ -106,10 +102,8 @@ n, m, k, c = map(int, input().split())
 # 나무의 그루 수, 벽의 정보 (벽은 -1)
 graph =[list(map(int, input().split())) for _ in range(n)]
 # 동 남 서 북 / 대각선
-di = [0, 1, 0, -1]
-dj = [1, 0, -1, 0]
-dih = [-1, 1, 1, -1]
-djh = [1, 1, -1, -1]
+di = [0, 1, 0, -1, -1, 1, 1, -1]
+dj = [1, 0, -1, 0, 1, 1, -1, -1]
 # 제초제 유지 기간 저장
 herbicide = [[0]*n for _ in range(n)]
 # m년 동안 총 박멸한 나무 수
