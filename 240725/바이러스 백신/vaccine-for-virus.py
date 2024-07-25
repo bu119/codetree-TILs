@@ -36,7 +36,7 @@ def bfs(startingPoint):
                 if board[nx][ny] == 0:
                     virusCnt += 1
                 queue.append((nx, ny))
-                
+
     # 모든 바이러스를 제거 못 했으면 최대 값 반환
     if virusCnt != totalVirus:
         return 250
@@ -70,7 +70,8 @@ dj = [1, 0, -1, 0]
 for selectedHospitals in combinations(hospitals, m):
     time = bfs(selectedHospitals)
     # 최소값 갱신
-    minV = min(minV, time)
+    if time < minV:
+        minV = time
 
 # 4.모든 바이러스 없앴는지 확인 -> 불가면 -1 반환
 if minV == 250:
