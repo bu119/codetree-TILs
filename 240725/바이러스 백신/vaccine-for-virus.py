@@ -1,8 +1,6 @@
 # M개의 병원을 적절히 골라 최대한 빨리 바이러스를 없애
 # 골라진 병원들을 시작으로 매 초마다 상하좌우로 인접한 지역 중 벽을 제외한 지역에 백신이 공급
-# queue
 # 바이러스를 전부 없애는데 걸리는 시간 중 최소 시간
-
 
 from itertools import combinations
 from collections import deque
@@ -14,25 +12,29 @@ def bfs(startingPoint):
     for x, y in startingPoint:
         visited[x][y] = 0
         queue.append((x, y))
-    # 방문한 바이러스 개수
+    # 방문한 바이러스 개수 저장
     virusCnt = 0
+    # 현재 탐색에서 걸리는 바이러스 제거 시간 저장
     time = 0
 
     while queue:
         x, y = queue.popleft()
 
+        # 바이러스 만났을 때 제거 시간 갱신
         if board[x][y] == 0 and time < visited[x][y]:
             time = visited[x][y]
-            # 최소 시간을 넘으면 탐색 종료
+            # 전체 경우의 최소 시간을 넘으면 바로 탐색 종료
             if time >= minV:
                 return time
-            
+
+        # 4방향 탐색
         for k in range(4):
             nx = x + di[k]
             ny = y + dj[k]
             if 0 <= nx < n and 0<= ny < n and visited[nx][ny] == -1 and board[nx][ny] != 1:
+                # 전체 시간, 바이러스 제거 시간 
                 visited[nx][ny] = visited[x][y] + 1
-                # 바이러스 이면
+                # 바이러스이면 개수 증가
                 if board[nx][ny] == 0:
                     virusCnt += 1
                 queue.append((nx, ny))
@@ -58,7 +60,7 @@ for i in range(n):
             totalVirus += 1
         # 병원이면 저장
         elif row[j] == 2:
-            hospitals.append((i,j))
+            hospitals.append((i, j))
     # N*N 배열 만들기
     board.append(row)
 
@@ -68,10 +70,9 @@ dj = [1, 0, -1, 0]
 # 1.병원 m개 고르고
 # 2.선택된 m개의 병원 탐색
 for selectedHospitals in combinations(hospitals, m):
-    time = bfs(selectedHospitals)
+    removalTime = bfs(selectedHospitals)
     # 최소값 갱신
-    if time < minV:
-        minV = time
+    minV = min(minV, removalTime)
 
 # 4.모든 바이러스 없앴는지 확인 -> 불가면 -1 반환
 if minV == 250:
