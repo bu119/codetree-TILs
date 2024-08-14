@@ -162,6 +162,8 @@ dj = [0, 0, -1, 0, 1, 0]
 wall = set()
 for _ in range(m):
     x, y, s = map(int, input().split())
+    x -= 1
+    y -= 1
     if s == 0:
         # (x, y) 바로 위에 벽 -> (x, y)에서 위로 갈 때, (x-1, y)에서 아래로 갈 때
         wall.add((x, y, 3))
