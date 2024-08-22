@@ -138,7 +138,7 @@ def touch_outer_wall():
                 coolLevel[i][j] -= 1
             # 0 또는 n-1로 열 고정
             # (0, 0), (0, n-1), (n-1, 0), (n-1, n-1)은 두 번 되므로 여기서는 제외
-            if 0 < i < n-1 and coolLevel[j][i] > 0:
+            if i != 0 and i != n-1 and coolLevel[j][i] > 0:
                 coolLevel[j][i] -= 1        
 
 # 사무실이 모두 시원해 졌는지 확인하는 함수
