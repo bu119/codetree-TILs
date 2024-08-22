@@ -15,7 +15,7 @@ def turn_on(sx, sy, direction):
             continue
 
         coolLevel[x][y] += level
-        visited[x][y] = 1
+        visited.add((x, y))
 
         # 다음 방향으로 갈 수 있는 지 체크
         # 직진: straight
@@ -44,7 +44,7 @@ def check_wall_45(x, y, route):
 
         nx += di[d]
         ny += dj[d]
-        if not (0 <= nx < n and 0 <= ny < n and visited[nx][ny] == 0):
+        if not (0 <= nx < n and 0 <= ny < n and (nx, ny) not in visited):
             return -1, -1
 
     return nx, ny
@@ -55,7 +55,7 @@ def go_straight(x, y, direction):
     if (x, y, direction) not in wall:
         nx = x + di[direction]
         ny = y + dj[direction]
-        if 0 <= nx < n and 0 <= ny < n and visited[nx][ny] == 0:
+        if 0 <= nx < n and 0 <= ny < n and (nx, ny) not in visited:
             return nx, ny
     return -1, -1
 
@@ -180,7 +180,7 @@ answer = -1
 for t in range(1, 101):
     # 에어컨 실행
     for x, y, d in airConditioner:
-        visited = [[0]*n for _ in range(n)]
+        visited = set() 
         turn_on(x, y, d)
     # 시원한 공기들이 섞이기 시작
     coolLevel = mix_air()
