@@ -43,7 +43,7 @@ def turn_on(sx, sy, direction):
 # 대각선 이동 경로 체크
 def check_wall_45(x, y, route):
     nx, ny = x, y  # 현재 위치 초기화
-    
+
     for d in route:
         # 벽 체크
         if (nx, ny, d) in wall:
@@ -102,9 +102,9 @@ def go_down_and_right_45(x, y, direction):
 
 
 # 공기를 섞는 함수
-def mix_air(airLevel):
+def mix_air():
     # 변경된 결과
-    changedAirLevel = deepcopy(airLevel)
+    changedCoolLevel = deepcopy(coolLevel)
     # 덜 시원한 쪽에서 체크
     for i in range(n):
         for j in range(n):
@@ -116,17 +116,17 @@ def mix_air(airLevel):
                     nj = j + dj[d]
                     if 0 <= ni < n and 0 <= nj < n:
                         # 기존 결과 값으로 공기 차이 분석
-                        diff = abs(airLevel[ni][nj] - airLevel[i][j]) // 4
+                        diff = abs(coolLevel[ni][nj] - coolLevel[i][j]) // 4
                         # 차이가 존재할 때
                         if diff != 0:
                             # 시원함이 높은 곳에서 낮은 곳으로 공기 이동
-                            if airLevel[i][j] < airLevel[ni][nj]:
-                                changedAirLevel[ni][nj] -= diff
-                                changedAirLevel[i][j] += diff
+                            if coolLevel[i][j] < coolLevel[ni][nj]:
+                                changedCoolLevel[ni][nj] -= diff
+                                changedCoolLevel[i][j] += diff
                             else:
-                                changedAirLevel[i][j] -= diff
-                                changedAirLevel[ni][nj] += diff
-    return changedAirLevel
+                                changedCoolLevel[i][j] -= diff
+                                changedCoolLevel[ni][nj] += diff
+    return changedCoolLevel
 
 
 # 외벽에 있는 칸에 대해서만 시원함이 1씩 감소시키는 함
@@ -159,7 +159,7 @@ for i in range(n):
     for j in range(n):
         if row[j] == 1:
             office.append((i, j))
-        elif row[j] > 1:
+        elif row[j] != 0:
             airConditioner.append((i, j, row[j]))
     board.append(row)
 
@@ -192,7 +192,7 @@ for t in range(1, 101):
         visited = [[0]*n for _ in range(n)]
         turn_on(x, y, d)
     # 시원한 공기들이 섞이기 시작
-    coolLevel = mix_air(coolLevel)
+    coolLevel = mix_air()
     # 외벽에 있는 칸에 대해서만 시원함이 1씩 감소
     touch_outer_wall()
 
