@@ -15,7 +15,7 @@ def turn_on(sx, sy, direction):
             continue
 
         coolLevel[x][y] += level
-        visited[nx][ny] = 1
+        visited[x][y] = 1
 
         # 다음 방향으로 갈 수 있는 지 체크
         # 직진: straight
