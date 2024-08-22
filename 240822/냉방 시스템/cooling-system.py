@@ -1,20 +1,12 @@
-#  n * n 크기의 격자 정보
-# 0은 빈 공간
-# 1은 사무실 구역
-# 2는 에어컨이 놓여있으며 왼쪽 방향을 향하고 있음
-# 3은 에어컨이 놓여있으며 위를 향하고 있음
-# 4는 에어컨이 놓여있으며 오른쪽을 향하고 있음
-# 5는 에어컨이 놓여있으며 아래를 향하고 있음
-
 from copy import deepcopy
 
+# 에어컨 켬
 def turn_on(sx, sy, direction):
 
     nx = sx + di[direction]
     ny = sy + dj[direction]
 
     stack = [(nx, ny, 5)]
-    visited[nx][ny] = 1
 
     while stack:
         x, y, level = stack.pop()
@@ -23,6 +15,7 @@ def turn_on(sx, sy, direction):
             continue
 
         coolLevel[x][y] += level
+        visited[nx][ny] = 1
 
         # 다음 방향으로 갈 수 있는 지 체크
         # 직진: straight
@@ -54,7 +47,6 @@ def check_wall_45(x, y, route):
         if not (0 <= nx < n and 0 <= ny < n and visited[nx][ny] == 0):
             return -1, -1
 
-    visited[nx][ny] = 1
     return nx, ny
 
 # 2:좌, 3: 상, 4: 우, 5: 하
@@ -64,7 +56,6 @@ def go_straight(x, y, direction):
         nx = x + di[direction]
         ny = y + dj[direction]
         if 0 <= nx < n and 0 <= ny < n and visited[nx][ny] == 0:
-            visited[nx][ny] = 1
             return nx, ny
     return -1, -1
 
