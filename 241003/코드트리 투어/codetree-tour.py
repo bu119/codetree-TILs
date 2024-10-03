@@ -109,7 +109,8 @@ for _ in range(q):
     elif type == 300:
         # 여행 상품 취소
         id = info[0]
-        del travelProducts[id]
+        if id in travelProducts:
+            del travelProducts[id]
     
     elif type == 400:
         # 최적의 여행 상품 판매
