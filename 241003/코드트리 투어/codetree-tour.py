@@ -59,41 +59,44 @@ def dijkstra(start):
     return visited
 
 
+# 상품이 생기면 이득 추가
+def add_product_benefits(productId):
+    revenue, dest = travelProducts[productId] 
+    cost = costs[dest]
+    # 판매 불가 상품
+    if revenue >= cost:
+        heapq.heappush(productBenefits, (-(revenue - cost), productId))
+
+
 def find_product_benefits():
-    # 각 여행 상품의 이득 저장 (이득, 고유 id)
-    heap = []
-    
+    benefits = []
     for productId in travelProducts:
-        revenue, dest = travelProducts[productId] 
+        revenue, dest = travelProducts[productId]
         cost = costs[dest]
         # 판매 불가 상품
         if revenue < cost:
             continue
-
-        heapq.heappush(heap, (-(revenue - cost), productId))
-        
-    return heap
+        heapq.heappush(benefits, (-(revenue - cost), productId))
+    
+    return benefits
 
 
 def find_best_product():
-
-    while productBenefits:
+    # 이득도 남아있고 여행 상품도 남아 있을 때, 최적 상품 반환
+    while productBenefits and travelProducts:
         _, productId = heapq.heappop(productBenefits)
-        # managementProducts에서 취소상품이 아닌지 확인
-        # managementProducts에 취소상품은 없음
-        # productBenefits에는 취소 상품도 있음 -> 제외해야함.
-        if productId in managementProducts:
+        if productId in travelProducts:
             del travelProducts[productId]
             return productId
     
     return -1
-    
+
 
 q = int(input())
 INF = 20000000000
-s = 0
 travelProducts = dict()
-managementProducts = set()
+# 각 여행 상품의 이득 저장 (이득, 고유 id)
+productBenefits = []
 
 for _ in range(q):
     type, *info = list(map(int, input().split()))
@@ -110,32 +113,31 @@ for _ in range(q):
             graph[u].append((v, w))
             
         # 출발지로부터 각 도시의 최단거리
-        costs = dijkstra(s)
+        costs = dijkstra(0)
         
     elif type == 200:
         # 여행 상품 생성
         id, revenue, dest = info
         travelProducts[id] = (revenue, dest)
-        managementProducts.add(id)
+        # 상품 생성시 이득 계산
+        add_product_benefits(id)
     
     elif type == 300:
         # 여행 상품 취소
         id = info[0]
-        # 여행 상품이 존재하는 경우 삭제
         if id in travelProducts:
             del travelProducts[id]
-            managementProducts.remove(id)
-            
-    elif type == 400:
-        # 최적의 여행 상품 판매 
-        # 매번 이득 계산 -> 시간 초과
-        # 출발점이 같으면 계산되 이득도 같다. -> 저장 해놓은 것을 쓰자.
-        if s == 0:
-            productBenefits = find_product_benefits()
-        print(find_best_product())
     
+    elif type == 400:
+        # 최적의 여행 상품 판매
+        # 매번 이득 계산 -> 시간 초과
+        # 출발점이 같으면 계산되 이득도 같다. -> 상품 생성 될 때 저장 해놓고 쓰자.
+        print(find_best_product())     
+   
     else:
         # 여행 상품의 출발지 변경
         s = info[0]
+        # 각 비용 새로 계산
         costs = dijkstra(s)
+        # 각 상품 이득 새로 계산
         productBenefits = find_product_benefits()
