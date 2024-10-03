@@ -71,26 +71,29 @@ def find_product_benefits():
             continue
 
         heapq.heappush(heap, (-(revenue - cost), productId))
-    
+        
     return heap
-    
 
-def find_best_travel_product(benefits):
-    
-    while benefits: 
-        _, id = heapq.heappop(benefits)
-        if id in travelProducts:
-            return id
 
+def find_best_product():
+
+    while productBenefits:
+        _, productId = heapq.heappop(productBenefits)
+        # managementProducts에서 취소상품이 아닌지 확인
+        # managementProducts에 취소상품은 없음
+        # productBenefits에는 취소 상품도 있음 -> 제외해야함.
+        if productId in managementProducts:
+            del travelProducts[productId]
+            return productId
+    
     return -1
-
+    
 
 q = int(input())
 INF = 20000000000
-travelProducts = dict()
-PreDepartureCity = -1
 s = 0
-productBenefits = []
+travelProducts = dict()
+managementProducts = set()
 
 for _ in range(q):
     type, *info = list(map(int, input().split()))
@@ -113,25 +116,26 @@ for _ in range(q):
         # 여행 상품 생성
         id, revenue, dest = info
         travelProducts[id] = (revenue, dest)
+        managementProducts.add(id)
     
     elif type == 300:
         # 여행 상품 취소
         id = info[0]
+        # 여행 상품이 존재하는 경우 삭제
         if id in travelProducts:
             del travelProducts[id]
-
+            managementProducts.remove(id)
+            
     elif type == 400:
-        # 최적의 여행 상품 판매
-        # 출발지가 같으면 이전 기록으로 판매
-        if PreDepartureCity != s:
-            # 이득 정보 가져오기
+        # 최적의 여행 상품 판매 
+        # 매번 이득 계산 -> 시간 초과
+        # 출발점이 같으면 계산되 이득도 같다. -> 저장 해놓은 것을 쓰자.
+        if s == 0:
             productBenefits = find_product_benefits()
-            PreDepartureCity = s
-        
-        print(find_best_travel_product(productBenefits))
-        
+        print(find_best_product())
+    
     else:
         # 여행 상품의 출발지 변경
         s = info[0]
-        # 출발지 변경에 따른 상품 cost 변경
         costs = dijkstra(s)
+        productBenefits = find_product_benefits()
